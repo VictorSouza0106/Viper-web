@@ -1,18 +1,28 @@
 header{
     background-color: #4a10a1;
+    height: 60px;
+    display: block;
 }
 
 .header-imgs{
+    height: 100%;
     display: flex;
-    padding: 10px;
+    align-items: center;
 }
 
 .img-icon{
     border-radius: 50%;
-    width: 90px;
+    height: 55px;
 }
 
 .img-logo{
-    width: 180px;
     margin-left: 10px;
+    height: 55px;
+}
+
+.menu{
+    display: flex;
+    justify-content: right;
+    flex-direction: row;
+    text-decoration: none;
 }
