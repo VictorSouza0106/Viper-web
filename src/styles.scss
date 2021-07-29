@@ -7,4 +7,7 @@
     margin: 0; 
     font-family: $font-primary;
     background-color: $color-light-primary;
+    li {
+        list-style-type: none;
+    }
 }

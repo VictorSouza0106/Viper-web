@@ -4,10 +4,16 @@ header{
     display: block;
 }
 
-.header-imgs{
+.header{
     height: 100%;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+
+    .header-imgs{
+        display: flex;
+        align-items: center;
+    }
 }
 
 .img-icon{
@@ -20,9 +26,16 @@ header{
     height: 55px;
 }
 
-.menu{
+.menu-ul{
     display: flex;
     justify-content: right;
     flex-direction: row;
     text-decoration: none;
 }
+
+.menu-item {
+    color: #fff;
+    margin: 0 10px;
+    font-size: 1.5em;
+}
+
