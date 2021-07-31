@@ -29,6 +29,18 @@ header{
     .menu-item {
         margin: 0 10px;
         font-size: 1.5em;
+        padding: 10px;
+    }
+
+    .menu-item:hover {
+        background-color: $color-light-primary;
+        border-radius: 20px;
+        color: $color-dark-primary;
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
     }
 }
 
@@ -43,6 +55,10 @@ header{
     .img-icon{
         border-radius: 50%;
         height: 55px;
+    }
+    a{
+        display: flex;
+        align-items: center;
     }
 }
 
@@ -60,6 +76,7 @@ footer {
         width: 100%;
         height: 100%;
         justify-content: center;
+
         .img-logo{
             margin-top: 20px;
             height: 120px;
