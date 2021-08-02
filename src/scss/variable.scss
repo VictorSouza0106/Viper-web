@@ -18,12 +18,5 @@ $color-dark-secondary:#5F7A37;
 $grid-columns: 12;
 
 /** Fonts */
-@font-face {
-    font-family: 'Courgette';
-    src: url('../assets/fonts/Courgette-Regular.woff') format('woff');
-    font-style: normal;
-    font-weight: normal;
-    font-stretch: normal;
-}
 
-$font-primary: 'Courgette';
+$font-primary: 'Courgette', cursive;
