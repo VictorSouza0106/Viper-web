@@ -56,8 +56,8 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
 
     let aspectRatio = window.innerWidth/window.innerHeight;
 
-    this.camera = new THREE.PerspectiveCamera(25,aspectRatio,0.1,100);
-    this.camera.position.set(0,0,2.5);
+    this.camera = new THREE.PerspectiveCamera(25,aspectRatio,0.1,1000);
+    this.camera.position.set( 0, 1.6, -2);
 
     let controls = new OrbitControls(this.camera, this.renderer?.domElement)
     controls.screenSpacePanning = true
