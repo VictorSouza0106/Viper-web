@@ -13,6 +13,8 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
 
     @ViewChild('rendererCanvas', {static: true})
     public rendererCanvas?: ElementRef<HTMLCanvasElement>;
+    public x: any;
+    public y: any;
 
     private renderer?:THREE.WebGLRenderer;
     private camera?:THREE.PerspectiveCamera;
@@ -56,12 +58,15 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
 
     let aspectRatio = window.innerWidth/window.innerHeight;
 
-    this.camera = new THREE.PerspectiveCamera(25,aspectRatio,0.1,1000);
-    this.camera.position.set( 0, 1.6, -2);
+    //camera eixo orbital
+    this.camera = new THREE.PerspectiveCamera(25,aspectRatio,0.1,100.0);
+    this.camera.position.set( 0, 1.6, -1.5);
 
+    //camera eixo reto
     let controls = new OrbitControls(this.camera, this.renderer?.domElement)
     controls.screenSpacePanning = true
-    controls.target.set(0.0, 1.25, 0.0)
+    controls.target.set(0.0, 1.35, 0.0)
+    controls.enabled = true
     controls.update()
 
     this.setLight();
@@ -88,7 +93,34 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
   
       // generate a VRM instance from gltf
       let model = await VRM.from(gltf);
-  
+
+
+      //gambi
+      document?.querySelector('body')?.addEventListener('mousemove', function(event) {
+        setInputX(event.clientX)
+        setInputY(event.clientY)
+      });
+
+      console.log(this.x)
+
+      function setInputX(valor: any){
+        document?.getElementById('testex')?.setAttribute("value", valor);
+        console.log(document?.getElementById('testex')?.getAttribute("value"))
+      }
+
+      function setInputY(valor: any){
+        document?.getElementById('testey')?.setAttribute("value", valor);
+      }
+
+      //bones
+      model?.humanoid?.getBoneNode(VRMSchema.HumanoidBoneName.LeftUpperArm)?.rotation.set(0,0,-5)
+      model?.humanoid?.getBoneNode(VRMSchema.HumanoidBoneName.RightUpperArm)?.rotation.set(0,0,5)
+
+      //posição do pescoço
+      model?.humanoid?.getBoneNode(VRMSchema.HumanoidBoneName.Neck)?.rotation.set(0,-1,0)
+
+      //Posição 0 da cabeça: x: 930 y: 280
+
         const bones = [
           VRMSchema.HumanoidBoneName.Neck
         ].map((boneName) => {
