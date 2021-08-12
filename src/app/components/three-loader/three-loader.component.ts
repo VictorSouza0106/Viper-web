@@ -11,50 +11,58 @@ import { VRM, VRMSchema } from '@pixiv/three-vrm';
 })
 export class ThreeLoaderComponent implements OnInit,AfterViewInit {
 
-    @ViewChild('rendererCanvas', {static: true})
-    public rendererCanvas?: ElementRef<HTMLCanvasElement>;
-    public x: any;
-    public y: any;
+    @ViewChild('rendererCanvas', {static: true}) rendererCanvas: ElementRef<HTMLCanvasElement>;
 
-    private renderer?:THREE.WebGLRenderer;
-    private camera?:THREE.PerspectiveCamera;
-    private scene?:THREE.Scene;
-    private light?:THREE.AmbientLight
-    private canvas?:any;
+    public axisX: number;
+    public axisY: number;
+    public model:VRM;
 
-    private frameId?: number;
+    private renderer: THREE.WebGLRenderer;
+    private camera: THREE.PerspectiveCamera;
+    private scene: THREE.Scene;
+    private canvas: HTMLCanvasElement;
+
+    
+    private width: number = window.innerWidth;
+    private height: number = window.innerHeight;
 
   constructor(  
     private ngZone: NgZone  
   ) { }
   
-  ngOnInit(): void {
+  public ngOnInit(): void {
+    this.mouseMoveListener();
+    this.create3DCanvas();
   }
 
-  ngAfterViewInit(){
-    
-    this.setRenderer();
+  public ngAfterViewInit(){
     this.animate();
   }
 
-  setRenderer(){
+  private create3DCanvas(){
+    this.scene = new THREE.Scene();
+    
+    this.loadVRM();
+    this.createRenderer();
+    this.createCamera();
+    this.createLight();
+  }
 
-    this.canvas = this.rendererCanvas?.nativeElement;
+  private createRenderer(){
+
+    this.canvas = this.rendererCanvas.nativeElement;
 
     this.renderer = new THREE.WebGLRenderer({
       antialias:true,
       alpha:true,
       canvas: this.canvas,
     });
+
     this.renderer.setSize(window.innerWidth-20,window.innerHeight-255);
     this.renderer.setPixelRatio(window.devicePixelRatio);
-
-    this.scene = new THREE.Scene();
-
-   this.setCamera();
   }
 
-  setCamera(){
+  private createCamera(){
 
     let aspectRatio = window.innerWidth/window.innerHeight;
 
@@ -63,24 +71,20 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
     this.camera.position.set( 0, 1.6, -1.5);
 
     //camera eixo reto
-    let controls = new OrbitControls(this.camera, this.renderer?.domElement)
+    let controls = new OrbitControls(this.camera, this.renderer.domElement)
     controls.screenSpacePanning = true
     controls.target.set(0.0, 1.35, 0.0)
     controls.enabled = true
     controls.update()
-
-    this.setLight();
   }
 
-  setLight(){
+  private createLight(){
     let light = new THREE.DirectionalLight(0xffffff,1);
     light.position.set(1.0, 1.0, 1.0).normalize()
-    this.scene?.add(light);
-
-    this.loadVRM();
+    this.scene.add(light);
   }
 
-  loadVRM(){
+  private loadVRM(){
     let loader = new GLTFLoader();
     
     loader.load(
@@ -92,39 +96,23 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
     async ( gltf ) => {
   
       // generate a VRM instance from gltf
-      let model = await VRM.from(gltf);
+      this.model = await VRM.from(gltf);
 
-
-      //gambi
-      document?.querySelector('body')?.addEventListener('mousemove', function(event) {
-        setInputX(event.clientX)
-        setInputY(event.clientY)
-      });
-
-      console.log(this.x)
-
-      function setInputX(valor: any){
-        document?.getElementById('testex')?.setAttribute("value", valor);
-        console.log(document?.getElementById('testex')?.getAttribute("value"))
-      }
-
-      function setInputY(valor: any){
-        document?.getElementById('testey')?.setAttribute("value", valor);
-      }
+      // 0.0000011562 * x ^ 2 - 1;
 
       //bones
-      model?.humanoid?.getBoneNode(VRMSchema.HumanoidBoneName.LeftUpperArm)?.rotation.set(0,0,-5)
-      model?.humanoid?.getBoneNode(VRMSchema.HumanoidBoneName.RightUpperArm)?.rotation.set(0,0,5)
+      this.model.humanoid.getBoneNode(VRMSchema.HumanoidBoneName.LeftUpperArm).rotation.set(0,0,-5)
+      this.model.humanoid.getBoneNode(VRMSchema.HumanoidBoneName.RightUpperArm).rotation.set(0,0,5)
 
       //posição do pescoço
-      model?.humanoid?.getBoneNode(VRMSchema.HumanoidBoneName.Neck)?.rotation.set(0,-1,0)
+      this.model.humanoid.getBoneNode(VRMSchema.HumanoidBoneName.Neck).rotation.set(0,0,0)
 
       //Posição 0 da cabeça: x: 930 y: 280
 
         const bones = [
           VRMSchema.HumanoidBoneName.Neck
         ].map((boneName) => {
-          return model?.humanoid?.getBoneNode(boneName)
+          return this.model.humanoid.getBoneNode(boneName)
         })
         const clip = THREE.AnimationClip.parseAnimation({
           hierarchy: [{
@@ -134,11 +122,12 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
             }]
           }]
         }, bones as any)
-        clip.tracks.some((track) => {
-          track.name = track.name.replace(/^\.bones\[([^\]]+)\].(position|quaternion|scale)$/, '$1.$2')
-        })
+
+        // clip.tracks.some((track) => {
+        //   track.name = track.name.replace(/^\.bones\[([^\]]+)\].(position|quaternion|scale)$/, '$1.$2')
+        // })
     
-        this.scene?.add(model.scene)
+        this.scene.add(this.model.scene)
     
       },
     
@@ -149,26 +138,52 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
       ( error ) => console.error( error )
     
       );  
-    }
+  }
 
-    public animate(): void {
-      this.ngZone.runOutsideAngular(() => {
-        if (document.readyState !== 'loading') {
-          this.render();
-        } else {
-          window.addEventListener('DOMContentLoaded', () => {
-            this.render();
-          });
-        }
-      });
-    }
+  private animate(): void {
+    this.ngZone.runOutsideAngular(() => {
 
-    public render(): void {
-      this.frameId = requestAnimationFrame(() => {
+      window.addEventListener('DOMContentLoaded', () => {
         this.render();
       });
-      this.renderer?.render(this.scene as any, this.camera as any);
-    }
+
+      window.addEventListener('resize', () => {
+        this.resize();
+      });
+    });
+  }
+
+  private render(): void {
+    let frameId = requestAnimationFrame(() => {
+      this.render();
+    });
+
+    this.animateNeck();
+
+    this.renderer.render(this.scene as any, this.camera as any);
+  }
+
+  private animateNeck(){
+    let newPositionX = 0.0000011562 * Math.pow(this.axisX,2) - 1;
+
+    if(this.model)
+      this.model.humanoid.getBoneNode(VRMSchema.HumanoidBoneName.Neck).rotation.set(0,newPositionX,0)
+  }
+
+  private resize(): void {
+
+    this.camera.aspect = this.width / this.height;
+    this.camera.updateProjectionMatrix();
+
+    this.renderer.setSize(this.width, this.height);
+  }
+
+  private mouseMoveListener(){
+    document.querySelector('body').addEventListener('mousemove', (event) => {
+      this.axisX = event.clientX;
+      this.axisY = event.clientY;
+    });
+  }
 }
 
  
