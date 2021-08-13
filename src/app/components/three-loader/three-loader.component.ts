@@ -21,7 +21,6 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
     private camera: THREE.PerspectiveCamera;
     private scene: THREE.Scene;
     private canvas: HTMLCanvasElement;
-
     
     private width: number = window.innerWidth;
     private height: number = window.innerHeight;
@@ -31,6 +30,11 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
   ) { }
   
   public ngOnInit(): void {
+
+    let gridX = this.width/16;
+
+    let gridY = this.width/9;
+
     this.mouseMoveListener();
     this.create3DCanvas();
   }
@@ -90,7 +94,7 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
     loader.load(
   
     // URL of the VRM you want to load
-    '../../../assets/Vipery2.vrm',
+    '../../../assets/vrm.vrm',
   
     // called when the resource is loaded
     async ( gltf ) => {
@@ -165,9 +169,20 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
 
   private animateNeck(){
     let newPositionX = 0.0000011562 * Math.pow(this.axisX,2) - 1;
+    let newPositionY = 0.0000011562 * Math.pow(this.axisX,2) - 1;
+
+    let posX = newPositionX > 1 ? 1 : newPositionX;
+    let posY = newPositionY;
 
     if(this.model)
-      this.model.humanoid.getBoneNode(VRMSchema.HumanoidBoneName.Neck).rotation.set(0,newPositionX,0)
+    {
+    //   //Animations
+      this.model.humanoid.getBoneNode(VRMSchema.HumanoidBoneName.Neck).rotation.set(0,posX * 0.5,0);
+    //   this.model.blendShapeProxy.setValue(VRMSchema.BlendShapePresetName.Fun,this.axisX * -0.001);
+    //   this.model.blendShapeProxy.setValue(VRMSchema.BlendShapePresetName.u,this.axisX * -0.001);
+    //   this.model.blendShapeProxy.setValue(VRMSchema.BlendShapePresetName.Sorrow,this.axisX * 0.001);
+    //   this.model.blendShapeProxy.update()
+    }
   }
 
   private resize(): void {
