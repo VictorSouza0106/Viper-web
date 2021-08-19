@@ -7,6 +7,11 @@
     margin: 0; 
     font-family: $font-primary;
     background-color: $color-light-primary;
+
+    background: url(./assets/images/bg-circuits.png),
+                linear-gradient($color-light-primary, $color-primary);
+                background-attachment: fixed;
+    
     li {
         list-style-type: none;
     }

@@ -30,11 +30,13 @@ header{
         margin: 0 10px;
         font-size: 1.5em;
         padding: 10px;
+        transition: 0.4s;
     }
 
     .menu-item:hover {
         background-color: $color-dark-secondary;
         border-radius: 20px;
+        color: $color-dark-primary;
     }
 
     a {
