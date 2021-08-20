@@ -9,6 +9,7 @@ export class IconComponent implements OnInit {
 
   @Input() iconName:string = 'snake';
   @Input() size:number = 24;
+  @Input() link:string = 'https://www.twitch.tv/viperydae';
 
   constructor() { }
 
