@@ -94,7 +94,7 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
     loader.load(
   
     // URL of the VRM you want to load
-    '../../../assets/vrm.vrm',
+    '../../../assets/Vipery2.vrm',
   
     // called when the resource is loaded
     async ( gltf ) => {
@@ -168,16 +168,16 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
   }
 
   private animateNeck(){
-    let newPositionX = 0.0000011562 * Math.pow(this.axisX,2) - 1;
-    let newPositionY = 0.0000011562 * Math.pow(this.axisX,2) - 1;
+    let newPositionX = this.axisX - 1;
+    let newPositionY = this.axisY - 1;
 
-    let posX = newPositionX > 1 ? 1 : newPositionX;
-    let posY = newPositionY;
+    let posX = newPositionX > 1.2 ? 1.2 : newPositionX;
+    let posY = newPositionY > 1.2 ? 1.2 : newPositionY;
 
     if(this.model)
     {
     //   //Animations
-      this.model.humanoid.getBoneNode(VRMSchema.HumanoidBoneName.Neck).rotation.set(0,posX * 0.5,0);
+      this.model.humanoid.getBoneNode(VRMSchema.HumanoidBoneName.Neck).rotation.set(posY * -0.5, posX * 0.5,0);
     //   this.model.blendShapeProxy.setValue(VRMSchema.BlendShapePresetName.Fun,this.axisX * -0.001);
     //   this.model.blendShapeProxy.setValue(VRMSchema.BlendShapePresetName.u,this.axisX * -0.001);
     //   this.model.blendShapeProxy.setValue(VRMSchema.BlendShapePresetName.Sorrow,this.axisX * 0.001);
@@ -195,8 +195,11 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
 
   private mouseMoveListener(){
     document.querySelector('body').addEventListener('mousemove', (event) => {
-      this.axisX = event.clientX;
-      this.axisY = event.clientY;
+
+      this.axisX = event.clientX / (window.innerWidth / 2);
+      this.axisY = event.clientY / (window.innerHeight/ 2);
+      
+      console.log('AXIS X', this.axisX);
     });
   }
 }
