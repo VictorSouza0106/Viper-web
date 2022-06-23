@@ -1,0 +1,22 @@
+{
+    "scheduleList":[
+      {
+         "date":"05/05/2022",
+         "theme":"Just Chatting",
+         "image":"justchatting.png",
+         "platform":"twitch"
+      },
+       {
+          "date":"17/05/2022",
+          "theme":"Just Chatting",
+          "image":"justchatting.png",
+          "platform":"twitch"
+       },
+       {
+          "date":"20/05/2022",
+          "theme":"Just Chatting",
+          "image":"justchatting.png",
+          "platform":"youtube"
+       }
+    ]
+ }

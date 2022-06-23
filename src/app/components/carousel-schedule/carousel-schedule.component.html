@@ -1,0 +1,15 @@
+<div id="slider">
+    <input type="radio" name="slider" id="s0" checked>
+    <input type="radio" name="slider" id="s1">
+    <input type="radio" name="slider" id="s2">
+    <input type="radio" name="slider" id="s3">
+    <input type="radio" name="slider" id="s4">
+    <input type="radio" name="slider" id="s5">
+    <input type="radio" name="slider" id="s6">
+
+    <label *ngFor="let elem of array let i = index" [for]="'s'+i" [id]="'slide'+i" (click)="setCenterIndex(i)">
+        {{getDateOfCard(i)}} 
+    </label>
+
+    <input type="button" class="full-schedule" value="Veja o cronograma completo!" (click)="openScheduleDialog()"/>
+</div>
