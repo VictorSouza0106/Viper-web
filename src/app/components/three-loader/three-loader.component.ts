@@ -13,8 +13,8 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
 
     @ViewChild('rendererCanvas', {static: true}) rendererCanvas: ElementRef<HTMLCanvasElement>;
 
-    public axisX: number;
-    public axisY: number;
+    public axisX: number = 1;
+    public axisY: number = 0.7;
     public model:VRM;
 
     private renderer: THREE.WebGLRenderer;
@@ -26,7 +26,7 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
     private height: number = window.innerHeight;
 
   constructor(  
-    private ngZone: NgZone  
+    private ngZone: NgZone,
   ) { }
   
   public ngOnInit(): void {
@@ -78,7 +78,7 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
     let controls = new OrbitControls(this.camera, this.renderer.domElement)
     controls.screenSpacePanning = true
     controls.target.set(0.0, 1.35, 0.0)
-    controls.enabled = true
+    controls.enabled = false;
     controls.update()
   }
 
@@ -194,7 +194,7 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
   }
 
   private mouseMoveListener(){
-    document.querySelector('body').addEventListener('mousemove', (event) => {
+    document.getElementById('rendererCanvas').addEventListener('mousemove', (event) => {
 
       this.axisX = event.clientX / (window.innerWidth / 2);
       this.axisY = event.clientY / (window.innerHeight/ 2);
