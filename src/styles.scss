@@ -6,13 +6,30 @@
 .default-body { 
     margin: 0; 
     font-family: $font-primary;
-    background-color: $color-light-primary;
 
-    background: url(./assets/images/bg-circuits.png),
-                linear-gradient($color-light-primary, $color-primary);
-                background-attachment: fixed;
+    background: linear-gradient(#a983e2, #3f3352);
+    background-attachment: fixed;
+    background-size: 150% 150%;
     
     li {
         list-style-type: none;
     }
+
+    .body-image{
+        background: url(./assets/images/bg-circuits.png);
+    }
+    @keyframes colors {
+        0% {
+            background-position-y: 0%;
+        }
+        50% {
+            background-position-y: 100%;
+        }
+        100% {
+            background-position-y: 0%;
+        }
+    }
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

@@ -2,31 +2,29 @@
     <div class="header">
         <div class="icon-imgs">
             <a href="#">
-                <img class="img-icon" src="../assets/images/vphotoWhite.png" />
-                <img class="img-logo" src="../assets/images/vLogo.png"/>
+                <img draggable="false" class="img-icon" src="../assets/images/vphotoWhite.png" />
+                <img draggable="false" class="img-logo" src="../assets/images/vLogo.png"/>
             </a>
         </div>
         <div>
             <ul class="menu-ul">
-                <a href="#"><li class="menu-item">Conheça-me</li></a>
-                <a href="#"><li class="menu-item">Cronograma</li></a>
-                <a href="#"><li class="menu-item">Portifólio</li></a>
+                <li class="menu-item">Conheça-me</li>
+                <li (click)="goTo('cards')" class="menu-item">Cronograma</li>
+                <li class="menu-item">Portifólio</li>
             </ul>
         </div>
     </div>
 </header>
 
-<router-outlet>
-    <app-three-loader></app-three-loader>
-</router-outlet>
+<router-outlet></router-outlet>
 
 <footer>
     <div class="footer">
         <div class="social-midias">
-            <app-icon [iconName]="'youtube'" [size]="50" [link]="'https://www.youtube.com/channel/UCGHYXJEZnxYi8tQcKaYwanA'"></app-icon>
+            <app-icon [iconName]="'youtube'" [size]="50" [link]="'https://www.youtube.com/viperydae'"></app-icon>
             <app-icon [iconName]="'twitch'" [size]="50"></app-icon>
             <app-icon [iconName]="'discord'" [size]="50" [link]="'https://discord.gg/VgQ6meJ9cZ'"></app-icon>
         </div>
-        <img class="img-logo" src="../assets/images/vLogo.png"/>
+        <img draggable="false" class="img-logo" src="../assets/images/vLogo.png"/>
     </div>
 </footer>
