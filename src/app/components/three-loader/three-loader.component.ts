@@ -17,6 +17,7 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
     public axisY: number = 0.7;
     public model:VRM;
 
+    private clock: THREE.Clock;
     private renderer: THREE.WebGLRenderer;
     private camera: THREE.PerspectiveCamera;
     private scene: THREE.Scene;
@@ -24,23 +25,21 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
     
     private width: number = window.innerWidth;
     private height: number = window.innerHeight;
+    private smooth: number;
 
   constructor(  
     private ngZone: NgZone,
   ) { }
   
   public ngOnInit(): void {
-
-    let gridX = this.width/16;
-
-    let gridY = this.width/9;
-
-    this.mouseMoveListener();
     this.create3DCanvas();
   }
 
   public ngAfterViewInit(){
+    this.clock = new THREE.Clock();
+    this.clock.start(); 
     this.animate();
+    this.mouseMoveListener();
   }
 
   private create3DCanvas(){
@@ -73,7 +72,7 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
     //camera eixo orbital
     this.camera = new THREE.PerspectiveCamera(25,aspectRatio,0.1,100.0);
     this.camera.position.set( 0, 1.6, -1.5);
-
+    
     //camera eixo reto
     let controls = new OrbitControls(this.camera, this.renderer.domElement)
     controls.screenSpacePanning = true
@@ -90,7 +89,7 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
 
   private loadVRM(){
     let loader = new GLTFLoader();
-    
+
     loader.load(
   
     // URL of the VRM you want to load
@@ -111,8 +110,11 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
       //posição do pescoço
       this.model.humanoid.getBoneNode(VRMSchema.HumanoidBoneName.Neck).rotation.set(0,0,0)
 
-      //Posição 0 da cabeça: x: 930 y: 280
+      this.model.springBoneManager.reset();
 
+     // this.smooth = 1.0 - Math.exp( - 10 * this.clock.getDelta() );
+
+      //Posição 0 da cabeça: x: 930 y: 280
         const bones = [
           VRMSchema.HumanoidBoneName.Neck
         ].map((boneName) => {
@@ -132,7 +134,6 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
         // })
     
         this.scene.add(this.model.scene)
-    
       },
     
       // called while loading is progressing
@@ -182,6 +183,7 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
     //   this.model.blendShapeProxy.setValue(VRMSchema.BlendShapePresetName.u,this.axisX * -0.001);
     //   this.model.blendShapeProxy.setValue(VRMSchema.BlendShapePresetName.Sorrow,this.axisX * 0.001);
     //   this.model.blendShapeProxy.update()
+      this.model.update( this.clock.getDelta() ); 
     }
   }
 
