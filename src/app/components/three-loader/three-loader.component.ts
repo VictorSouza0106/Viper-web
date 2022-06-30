@@ -15,6 +15,9 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
 
     public axisX: number = 1;
     public axisY: number = 0.7;
+
+    public neckX: number = 1;
+    public neckY: number = 0.7;
     public model:VRM;
 
     private clock: THREE.Clock;
@@ -26,6 +29,8 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
     private width: number = window.innerWidth;
     private height: number = window.innerHeight;
     private smooth: number;
+
+    private timeoutHandle: any;
 
   constructor(  
     private ngZone: NgZone,
@@ -169,16 +174,23 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
   }
 
   private animateNeck(){
-    let newPositionX = this.axisX - 1;
-    let newPositionY = this.axisY - 1;
+    let newPositionX = this.axisX ?? 1;
+    let newPositionY = this.axisY ?? 0.7;
 
-    let posX = newPositionX > 1.2 ? 1.2 : newPositionX;
+    let posX = newPositionX > 2 ? 2 : newPositionX;
     let posY = newPositionY > 1.2 ? 1.2 : newPositionY;
+
+    if(Math.round(this.neckX * 10) < Math.round(posX * 10)) this.neckX += 0.13;
+    if(Math.round(this.neckX * 10) > Math.round(posX * 10)) this.neckX -= 0.13; 
+
+    if(Math.round(this.neckY * 10) < Math.round(posY * 10)) this.neckY += 0.07;
+    if(Math.round(this.neckY * 10) > Math.round(posY * 10)) this.neckY -= 0.07;
+    
 
     if(this.model)
     {
     //   //Animations
-      this.model.humanoid.getBoneNode(VRMSchema.HumanoidBoneName.Neck).rotation.set(posY * -0.5, posX * 0.5,0);
+      this.model.humanoid.getBoneNode(VRMSchema.HumanoidBoneName.Neck).rotation.set((this.neckY - 1) * -0.5, (this.neckX - 1) * 0.5,0);
     //   this.model.blendShapeProxy.setValue(VRMSchema.BlendShapePresetName.Fun,this.axisX * -0.001);
     //   this.model.blendShapeProxy.setValue(VRMSchema.BlendShapePresetName.u,this.axisX * -0.001);
     //   this.model.blendShapeProxy.setValue(VRMSchema.BlendShapePresetName.Sorrow,this.axisX * 0.001);
@@ -196,12 +208,19 @@ export class ThreeLoaderComponent implements OnInit,AfterViewInit {
   }
 
   private mouseMoveListener(){
-    document.getElementById('rendererCanvas').addEventListener('mousemove', (event) => {
 
+    document.getElementById('rendererCanvas').addEventListener('mousemove', (event) => {
       this.axisX = event.clientX / (window.innerWidth / 2);
       this.axisY = event.clientY / (window.innerHeight/ 2);
+
+      window.clearTimeout(this.timeoutHandle);
+
+      this.timeoutHandle = window.setTimeout(() => {
+        this.axisX = 1;
+        this.axisY = 0.7;
+      }, 2000);
       
-      console.log('AXIS X', this.axisX);
+
     });
   }
 }
